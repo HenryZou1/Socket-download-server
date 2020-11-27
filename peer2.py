@@ -3,7 +3,7 @@
 A P2P client
 It provides the following functions:
 - Register the content file to the index server (R)
-- Contact the index server to search for a content file (D) 
+- Contact the index server to search for a content file (D)
     - Contact the peer to download the file
     - Register the content file to the index server
 - De-register a content file (T)
@@ -207,7 +207,7 @@ else:
                     break
                 filename = str(input('Please Enter Valid local File Name\n'))
             while True:
-                print(username + " File Name " + filename)
+                print(username + "File Name " + filename)
                 r_pdu = PDU('R', {'peer_name': username, 'file_name': filename, 'address': (host, serverPort)})
                 b_pdu = pickle.dumps(r_pdu)
                 s.send(b_pdu)

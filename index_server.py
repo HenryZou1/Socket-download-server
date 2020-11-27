@@ -15,8 +15,9 @@ import socket  # Import socket module
 from collections import namedtuple
 import pickle
 import os
+from multiprocessing import Process, Manager
 
-port = 60003 # Reserve a port for your service.
+port = 60000 # Reserve a port for your service.
 s = socket.socket(socket.SOCK_DGRAM)  # Create a socket object
 host = socket.gethostname()  # Get local machine name
 s.bind((host, port))  # Bind to the port
@@ -30,6 +31,7 @@ fList = []  # list of files, containing Files_List namedtuples
 
 
 def service():
+
     while True:
         binary_pdu = conn.recv(1024)
         print("Server List:")
@@ -42,6 +44,7 @@ def service():
         data_type = pdu.data_type
         data = pdu.data
         print("Recieved data type: "+data_type)
+
         # if 'R'
         # check list of files
         # if file does not already exist (new)
@@ -113,7 +116,7 @@ def service():
                 b_pdu = pickle.dumps(e_pdu)
                 conn.send(b_pdu)
         elif data_type == 'Q':
-            p_peer_name = data.get('peer_name')
+
 
             deletelist = []
             for x in fList:
@@ -144,12 +147,12 @@ def service():
         # else ....
         print('Done sending')
 
+manager = Manager()
+fList = manager.list()
 
 while True:
     conn, addr = s.accept()  # Establish connection with client.
-    newpid = os.fork()
-    if newpid == 0:
-        service()
-    else:
-        print(addr)
+    print(addr)
+    p = Process(target=service)
+    p.start()
 # conn.close() # close the connection
